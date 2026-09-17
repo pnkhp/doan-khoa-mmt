@@ -25,6 +25,11 @@ footer {
 .skip-link { color: #ffffff; }
 .header { box-shadow: 0 2px 12px rgba(36, 87, 128, .06); }
 .header .brand{gap:9px;font-size:11px}
-.header .brand-symbol{font-size:29px;width:33px}
-.header .brand-symbol span{font-size:22px;top:-6px}
+.brand-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+@media(max-width:820px){.header .brand-logo{width:42px;height:42px}}
 @media(max-width:520px){.header .brand{font-size:10px}}
