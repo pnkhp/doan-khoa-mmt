@@ -1,0 +1,8 @@
+# File nén gốc và ảnh trùng, không cần cho website
+*.zip
+**/XÓA/
+
+# Cấu hình cục bộ
+.vscode/
+.env
+.env.*
