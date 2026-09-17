@@ -34,6 +34,21 @@ footer {
 @media(max-width:820px){.header .brand-logo{width:42px;height:42px}}
 @media(max-width:520px){.header .brand{font-size:10px}}
 
+/* SVG icons avoid automatic color-emoji rendering on iOS. */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  vertical-align: -.125em;
+}
+.button .icon, .text-link .icon, .archive-link .icon,
+.card-content button .icon { width: 18px; height: 18px; }
+.card-content button .icon { color: var(--cyan); }
+.contact-decoration .icon { display: block; }
+.contact-inner { isolation: isolate; }
+.contact-decoration { z-index: -1; }
+
 /* Mobile: readable content, comfortable touch targets and compact navigation. */
 @media (max-width: 820px) {
   .nav-wrap { gap: 10px; }
