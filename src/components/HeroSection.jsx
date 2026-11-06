@@ -6,7 +6,7 @@ import {
   useReducedMotion,
   useSpring,
 } from 'motion/react';
-import { ArrowRightIcon, ArrowUpRightIcon, NetworkNodesIcon } from './Icons.jsx';
+import { ArrowRightIcon, ArrowUpRightIcon } from './Icons.jsx';
 
 const HERO_SLIDES = [
   {
@@ -41,6 +41,12 @@ const HERO_SLIDES = [
     image: '/NC OPEN BADMINTON 2026/BADMINTON1.jpg',
     alt: 'Giải cầu lông mở rộng NC Open Badminton 2026',
   },
+];
+
+const STACK_AVATARS = [
+  '/NEWBIE TO CREWBIE/ẢNH/NTC1.jpg',
+  '/NGỌN ĐUỐC XANH/NDX2026.jpg',
+  '/VNU TOUR/ẢNH/VNUTOUR.jpg',
 ];
 
 const TILT_SPRING = { stiffness: 220, damping: 24, mass: 0.7 };
@@ -115,9 +121,7 @@ export function HeroSection() {
             </a>
           </div>
           <div className="hero-note">
-            <span className="mini-network" aria-hidden="true">
-              <NetworkNodesIcon />
-            </span>
+            <span className="hero-note__dot" aria-hidden="true" />
             <span>Đoàn kết · Tiên phong · Trách nhiệm · Đổi mới</span>
           </div>
         </div>
@@ -195,9 +199,18 @@ export function HeroSection() {
           </motion.div>
 
           <div className="floating-label">
-            <span className="network-hub-badge" aria-hidden="true">
-              <NetworkNodesIcon />
-            </span>
+            <div className="community-avatar-stack" aria-hidden="true">
+              {STACK_AVATARS.map(src => (
+                <img
+                  key={src}
+                  src={src}
+                  alt=""
+                  className="community-avatar-stack__img"
+                  draggable="false"
+                />
+              ))}
+              <span className="community-avatar-stack__count">1.3K+</span>
+            </div>
             <div>
               Một tập thể.
               <br />
