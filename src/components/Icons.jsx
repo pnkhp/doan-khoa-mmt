@@ -88,7 +88,7 @@ export function ArrowUpIcon() {
   );
 }
 
-export function SparkleIcon() {
+export function NetworkNodesIcon() {
   return (
     <svg
       className="icon"
@@ -101,7 +101,11 @@ export function SparkleIcon() {
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M12 2v20M2 12h20M5 5l14 14M5 19 19 5" />
+      <circle cx="6" cy="6" r="2.5" />
+      <circle cx="18" cy="6" r="2.5" />
+      <circle cx="12" cy="18" r="2.5" />
+      <circle cx="12" cy="11" r="2" fill="currentColor" />
+      <path d="M8 7.5 10.5 9.8M16 7.5 13.5 9.8M12 13v2.5" />
     </svg>
   );
 }
