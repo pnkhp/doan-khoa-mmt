@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { COMMUNITY_MOMENTS } from '../data/activities.js';
-import { ArrowLeftIcon, ArrowRightIcon } from './Icons.jsx';
 
 const CARD_SPRING = {
   type: 'spring',
@@ -55,6 +54,15 @@ export function CommunityPhotoDeck() {
         if (e.pointerType === 'mouse') setIsHovered(true);
       }}
       onPointerLeave={() => setIsHovered(false)}
+      onKeyDown={e => {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          prevCard();
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          nextCard();
+        }
+      }}
       aria-roledescription="carousel"
       aria-label="Khoảnh khắc hoạt động Nhà Mạng"
     >
@@ -154,14 +162,6 @@ export function CommunityPhotoDeck() {
         </div>
 
         <div className="photo-deck__controls">
-          <button
-            type="button"
-            className="photo-deck__nav-btn"
-            aria-label="Khoảnh khắc trước"
-            onClick={prevCard}
-          >
-            <ArrowLeftIcon />
-          </button>
           <div className="photo-deck__dots" role="tablist" aria-label="Chọn khoảnh khắc">
             {COMMUNITY_MOMENTS.map((item, idx) => {
               const selected = idx === activeIndex;
@@ -178,14 +178,6 @@ export function CommunityPhotoDeck() {
               );
             })}
           </div>
-          <button
-            type="button"
-            className="photo-deck__nav-btn"
-            aria-label="Khoảnh khắc tiếp theo"
-            onClick={nextCard}
-          >
-            <ArrowRightIcon />
-          </button>
         </div>
       </div>
     </div>
