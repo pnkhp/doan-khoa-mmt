@@ -43,12 +43,6 @@ const HERO_SLIDES = [
   },
 ];
 
-const STACK_AVATARS = [
-  '/NEWBIE TO CREWBIE/ẢNH/NTC1.jpg',
-  '/NGỌN ĐUỐC XANH/NDX2026.jpg',
-  '/VNU TOUR/ẢNH/VNUTOUR.jpg',
-];
-
 const TILT_SPRING = { stiffness: 220, damping: 24, mass: 0.7 };
 const SLIDE_EASE = [0.23, 1, 0.32, 1];
 
@@ -199,46 +193,50 @@ export function HeroSection() {
           </motion.div>
 
           <div className="floating-label">
-            <div className="community-avatar-stack" aria-hidden="true">
-              {STACK_AVATARS.map(src => (
-                <img
-                  key={src}
-                  src={src}
-                  alt=""
-                  className="community-avatar-stack__img"
-                  draggable="false"
-                />
-              ))}
-              <span className="community-avatar-stack__count">1.3K+</span>
+            <div
+              className="community-avatar-stack"
+              role="tablist"
+              aria-label="Chọn khoảnh khắc tiêu biểu"
+            >
+              {HERO_SLIDES.map((slide, idx) => {
+                const selected = idx === activeIdx;
+                return (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    aria-label={`Xem khoảnh khắc ${slide.badge}`}
+                    title={slide.badge}
+                    className={`community-avatar-btn${
+                      selected ? ' is-active' : ''
+                    }`}
+                    onClick={() => setActiveIdx(idx)}
+                  >
+                    <img
+                      src={slide.image}
+                      alt=""
+                      className="community-avatar-stack__img"
+                      draggable="false"
+                    />
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                className="community-avatar-stack__count"
+                onClick={nextSlide}
+                aria-label="Chuyển sang khoảnh khắc tiếp theo"
+                title="Chuyển ảnh tiếp theo"
+              >
+                1.3K+
+              </button>
             </div>
             <div>
               Một tập thể.
               <br />
               <strong>Ngàn kết nối.</strong>
             </div>
-          </div>
-
-          <div
-            className="hero-thumb-dock"
-            role="tablist"
-            aria-label="Chọn khoảnh khắc tiêu biểu"
-          >
-            {HERO_SLIDES.map((slide, idx) => {
-              const selected = idx === activeIdx;
-              return (
-                <button
-                  key={slide.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={selected}
-                  aria-label={slide.badge}
-                  className={`hero-thumb${selected ? ' is-active' : ''}`}
-                  onClick={() => setActiveIdx(idx)}
-                >
-                  <img src={slide.image} alt="" draggable="false" />
-                </button>
-              );
-            })}
           </div>
         </div>
       </div>
