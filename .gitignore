@@ -2,11 +2,14 @@
 *.zip
 **/XÓA/
 
+# Dependencies & Build output
+node_modules/
+dist/
+
 # Cấu hình cục bộ
 .vscode/
 .env
 .env.*
-
 
 # Cấu hình AI Agent cục bộ
 .agents/

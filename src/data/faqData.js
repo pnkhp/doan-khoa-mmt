@@ -1,5 +1,5 @@
 /* Dữ liệu biên soạn từ tài liệu gốc; số liệu phản ánh tài liệu, không phải dữ liệu thời gian thực. */
-window.doanKhoaFAQ = [
+export const FAQ_DATA = [
   { id: 'gioi-thieu', question: 'Đoàn Khoa MMT&TT là tổ chức nào?', keywords: ['giới thiệu', 'đoàn khoa', 'trực thuộc'], answer: 'Đoàn TNCS Hồ Chí Minh Khoa Mạng máy tính và Truyền thông là tổ chức Đoàn cơ sở trực thuộc Đoàn Trường Đại học Công nghệ Thông tin – ĐHQG-HCM, đồng hành cùng đoàn viên, sinh viên trong học tập và rèn luyện.', source: 'NoiDungChinh/Nội dung.docx', section: 'Giới thiệu chung' },
   { id: 'thanh-lap', question: 'Đoàn Khoa được nâng cấp thành Đoàn cơ sở khi nào?', keywords: ['thành lập', 'ngày thành lập', 'lịch sử', '11/11/2014'], answer: 'Đoàn Khoa được nâng cấp chính thức từ Liên Chi đoàn Khoa thành Đoàn cơ sở vào ngày 11/11/2014.', source: 'NoiDungChinh/Nội dung.docx', section: 'Giới thiệu chung' },
   { id: 'quy-mo', question: 'Đoàn Khoa có bao nhiêu Chi đoàn và đoàn viên?', keywords: ['quy mô', 'số lượng', 'chi đoàn', 'bao nhiêu sinh viên'], answer: 'Theo tài liệu giới thiệu, Đoàn Khoa quản lý 18 Chi đoàn: 14 Chi đoàn Chương trình Đại trà và 4 Chi đoàn Chương trình Tài năng, với hơn 1.336 đoàn viên và sinh viên chính quy. Đây là số liệu trong tài liệu nguồn, không phải thống kê trực tiếp theo thời gian thực.', source: 'NoiDungChinh/Nội dung.docx', section: 'Giới thiệu chung' },
@@ -24,5 +24,83 @@ window.doanKhoaFAQ = [
   { id: 'tien-tien', question: 'Danh hiệu Thanh niên tiên tiến làm theo lời Bác ghi nhận điều gì?', keywords: ['thanh niên tiên tiến', 'làm theo lời bác', 'danh hiệu'], answer: 'Danh hiệu ghi nhận đoàn viên, sinh viên tiêu biểu trong học tập, nghiên cứu khoa học, tình nguyện, công tác Đoàn – Hội và rèn luyện. Tài liệu giới thiệu chưa nêu tiêu chí định lượng hoặc quy trình xét danh hiệu.', source: 'THANH NIÊN TIÊN TIẾN LÀM THEO LỜI BÁC/CONTENT.docx', section: 'Giới thiệu danh hiệu' },
   { id: 'ao-khoa', question: 'Áo Khoa có thiết kế và chất liệu như thế nào?', keywords: ['áo khoa', 'đồng phục', 'chất liệu', 'cotton'], answer: 'Theo tài liệu, Áo Khoa có thiết kế đen phối đỏ, chất liệu thun cotton cá sấu 100% co giãn 4 chiều; logo và họa tiết được thêu. Tài liệu không cung cấp giá bán hay đường dẫn đặt áo.', source: 'GIỚI THIỆU ÁO KHOA/CONTENT.docx', section: 'Giới thiệu Áo Khoa' },
   { id: 'can-bo', question: 'Hội thi Cán bộ Đoàn giỏi UIT có thành tích nổi bật nào?', keywords: ['cán bộ đoàn giỏi', 'nguyễn hữu nghĩa', 'quán quân', 'á quân'], answer: 'Theo tài liệu, năm 2025 Nguyễn Hữu Nghĩa đạt ngôi Á quân Hội thi Cán bộ Đoàn giỏi UIT; năm 2026 các cán bộ Đoàn Khoa chinh phục vị trí Quán quân. Hội thi rèn kiến thức, kỹ năng công tác Đoàn – Hội và xử lý tình huống.', source: 'NoiDungChinh/Nội dung.docx', section: 'Hội thi Cán bộ Đoàn giỏi' },
-  { id: 'thanh-tich', question: 'Đoàn Khoa được ghi nhận những thành tích nào?', keywords: ['thành tích', 'giấy khen', 'cờ thi đua', 'khen thưởng'], answer: 'Tài liệu liệt kê, trong đó có: Giấy khen của Ban Cán sự Đoàn ĐHQG-HCM về đóng góp tích cực năm học 2024–2025; Cờ khen của BCH Đoàn trường UIT năm học 2023–2024; Cờ thi đua đơn vị xuất sắc của BCH Thành Đoàn TP.HCM cho ba năm học liên tục 2017–2018, 2018–2019, 2019–2020.', source: 'Thanh Tich/Các thành tích.docx', section: 'Danh sách thành tích' }
+  { id: 'thanh-tich', question: 'Đoàn Khoa được ghi nhận những thành tích nào?', keywords: ['thành tích', 'giấy khen', 'cờ thi đua', 'khen thưởng'], answer: 'Tài liệu liệt kê, trong đó có: Giấy khen của Ban Cán sự Đoàn ĐHQG-HCM về đóng góp tích cực năm học 2024–2025; Cờ khen của BCH Đoàn trường UIT năm học 2023–2024; Cờ thi đua đơn vị xuất sắc của BCH Thành Đoàn TP.HCM cho ba năm học liên tục 2017–2018, 2018–2019, 2019–2020.', source: 'Thanh Tich/Các thành tích.docx', section: 'Danh sách thành tích' },
 ];
+
+export const SUGGESTED_FAQ_IDS = ['cac-ban', 'ngon-duoc', 'netsec', 'newbie'];
+
+export const FAQ_FALLBACK =
+  'Mình chưa có thông tin đủ chắc chắn trong tài liệu để trả lời câu này. Bạn có thể chọn câu hỏi gợi ý hoặc nêu tên hoạt động. Tài liệu hiện có không xác nhận lịch sắp tới, phí, đường dẫn đăng ký hay thông tin liên hệ; hãy kiểm tra thông báo chính thức của Đoàn Khoa trước khi tham gia.';
+
+const STOP_WORDS = new Set(
+  'la gi cua va co cho toi minh ban oi ve nao nhung cac duoc the nao nhu mot hay xin hoi muon biet'.split(' ')
+);
+
+const SENSITIVE_QUERY_RE =
+  /\b(dang ky|lien he|email|so dien thoai|hotline|facebook|fanpage|dia chi|gia ban|gia ao|bao nhieu tien|le phi|hoc phi|mien phi|mua ao|dat ao|lich|sap toi|khi nao|bao gio|o dau|dia diem|han chot|tuyen thanh vien)\b/;
+const FACTUAL_OVERRIDE_RE = /\b(nang cap|thanh lap|lich su|da den|dia phuong)\b/;
+
+export function normalizeText(text) {
+  return String(text)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function tokenize(text) {
+  return normalizeText(text)
+    .split(' ')
+    .filter(word => word && !STOP_WORDS.has(word));
+}
+
+function levenshtein(a, b) {
+  const row = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    let previous = row[0];
+    row[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const old = row[j];
+      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, previous + (a[i - 1] === b[j - 1] ? 0 : 1));
+      previous = old;
+    }
+  }
+  return row[b.length];
+}
+
+export function findFaqAnswer(query) {
+  const text = normalizeText(query);
+  if (SENSITIVE_QUERY_RE.test(text) && !FACTUAL_OVERRIDE_RE.test(text)) return null;
+  const input = tokenize(text);
+  if (!input.length) return null;
+
+  const ranked = FAQ_DATA.map(item => {
+    const phrases = [item.question, ...(item.keywords || [])].map(normalizeText);
+    if (phrases.includes(text)) return { item, score: 1 };
+    const vocabulary = new Set(phrases.flatMap(tokenize));
+    const coverage =
+      input.reduce(
+        (sum, word) =>
+          sum +
+          (vocabulary.has(word)
+            ? 1
+            : [...vocabulary].some(
+                other => word.length >= 4 && other.length >= 4 && levenshtein(word, other) <= 1
+              )
+            ? 0.85
+            : 0),
+        0
+      ) / input.length;
+    const phraseMatch = (item.keywords || [])
+      .map(normalizeText)
+      .some(key => key.length >= 4 && ` ${text} `.includes(` ${key} `));
+    return { item, score: coverage * 0.88 + (phraseMatch ? 0.1 : 0) };
+  }).sort((a, b) => b.score - a.score);
+
+  if (!ranked.length || ranked[0].score < 0.7) return null;
+  if (ranked[0].score < 1 && ranked[1] && ranked[0].score - ranked[1].score < 0.035) return null;
+  return ranked[0].item;
+}

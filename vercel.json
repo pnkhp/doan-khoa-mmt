@@ -1,7 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "buildCommand": "",
-  "installCommand": "",
-  "outputDirectory": "."
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/((?!assets/|images/|NoiDungChinh/|Thanh%20Tich/|.*\\.[a-zA-Z0-9]+$).*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(ban-hoc-tap|ban-truyen-thong-su-kien|ban-thiet-ke)\\.html",
+      "destination": "/index.html"
+    }
+  ]
 }
