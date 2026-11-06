@@ -140,6 +140,96 @@ let currentFilter = 'all';
 let expanded = false;
 let lastTrigger;
 
+// Native top-layer dialogs provide focus containment and background inertness.
+// Own only this class: never remove locks owned by the chat widget.
+function syncOverlayLock() {
+  document.body.classList.toggle('fe-overlay-open',
+    dialog.open || lightbox.open || drawer.open);
+}
+function closeOnBackdrop(panel) {
+  // Synchronize immediately; native close events may wait for a rendering task.
+  const nativeClose = panel.close.bind(panel);
+  panel.close = () => {
+    nativeClose();
+    syncOverlayLock();
+    if (panel === lightbox && dialog.open) imageTrigger?.focus({ preventScroll: true });
+    if (panel === dialog) {
+      if (lightbox.open) lightbox.close();
+      lastTrigger?.focus({ preventScroll: true });
+    }
+    if (panel === drawer) {
+      resetMenu();
+      if (!desktop.matches) menuButton.focus({ preventScroll: true });
+    }
+  };
+  panel.addEventListener('cancel', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    panel.close();
+    syncOverlayLock();
+  });
+  panel.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      panel.close();
+      syncOverlayLock();
+    }
+  });
+  let startedOutside = false;
+  const outside = event => {
+    const rect = panel.getBoundingClientRect();
+    return event.target === panel && (event.clientX < rect.left || event.clientX > rect.right ||
+      event.clientY < rect.top || event.clientY > rect.bottom);
+  };
+  panel.addEventListener('pointerdown', event => { startedOutside = outside(event); });
+  panel.addEventListener('click', event => {
+    if (startedOutside && outside(event)) panel.close();
+    startedOutside = false;
+  });
+}
+const lightbox = document.createElement('dialog');
+lightbox.id = 'lightbox-dialog';
+lightbox.setAttribute('aria-label', 'Xem ảnh hoạt động');
+lightbox.innerHTML = '<button type="button" class="lightbox-close" aria-label="Đóng ảnh">×</button><img id="lightbox-image" alt=""><div class="lightbox-controls"><button type="button" class="lightbox-prev" aria-label="Ảnh trước">←</button><p id="lightbox-caption" aria-live="polite" aria-atomic="true"></p><button type="button" class="lightbox-next" aria-label="Ảnh tiếp theo">→</button></div>';
+document.body.append(lightbox);
+let galleryItem;
+let imageIndex = 0;
+let imageTrigger;
+function displayImage(index) {
+  imageIndex = (index + galleryItem.images.length) % galleryItem.images.length;
+  const image = lightbox.querySelector('img');
+  image.src = galleryItem.images[imageIndex];
+  image.alt = `${galleryItem.title} – hình ảnh ${imageIndex + 1}`;
+  lightbox.querySelector('#lightbox-caption').textContent = `${galleryItem.title} · ${imageIndex + 1} / ${galleryItem.images.length}`;
+  lightbox.querySelectorAll('.lightbox-prev,.lightbox-next').forEach(button => {
+    button.disabled = galleryItem.images.length < 2;
+  });
+}
+function openImage(item, index, trigger) {
+  galleryItem = item;
+  imageTrigger = trigger;
+  displayImage(index);
+  lightbox.showModal();
+  syncOverlayLock();
+  lightbox.querySelector('.lightbox-close').focus({ preventScroll: true });
+}
+lightbox.querySelector('.lightbox-close').addEventListener('click', () => lightbox.close());
+lightbox.querySelector('.lightbox-prev').addEventListener('click', () => displayImage(imageIndex - 1));
+lightbox.querySelector('.lightbox-next').addEventListener('click', () => displayImage(imageIndex + 1));
+lightbox.addEventListener('keydown', event => {
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    event.preventDefault();
+    displayImage(imageIndex + (event.key === 'ArrowRight' ? 1 : -1));
+  }
+});
+lightbox.addEventListener('close', () => {
+  if (lightbox.open) return;
+  syncOverlayLock();
+  if (dialog.open && imageTrigger?.isConnected) imageTrigger.focus({ preventScroll: true });
+});
+closeOnBackdrop(lightbox);
+
 function renderActivities() {
   const matches = activities.filter(item => currentFilter === 'all' || item.category === currentFilter);
   const visible = expanded ? matches : matches.slice(0, 6);
@@ -196,19 +286,27 @@ function openActivity(item, trigger) {
     const image = document.createElement('img');
     image.src = path; image.alt = `${item.title} – hình ảnh ${i + 1}`;
     image.loading = i === 0 ? 'eager' : 'lazy';
-    gallery.append(image);
+    const imageButton = document.createElement('button');
+    imageButton.type = 'button';
+    imageButton.className = 'gallery-image';
+    imageButton.setAttribute('aria-label', `Phóng to ${item.title} – hình ảnh ${i + 1}`);
+    imageButton.setAttribute('aria-haspopup', 'dialog');
+    imageButton.append(image);
+    imageButton.addEventListener('click', () => openImage(item, i, imageButton));
+    gallery.append(imageButton);
   });
   dialog.showModal(); dialog.scrollTop = 0;
-  document.body.classList.add('modal-open');
+  syncOverlayLock();
+  dialog.querySelector('.dialog-close').focus({ preventScroll: true });
 }
 
 document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
-dialog.addEventListener('click', event => {
-  const rect = dialog.getBoundingClientRect();
-  if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) dialog.close();
-});
+closeOnBackdrop(dialog);
 dialog.addEventListener('close', () => {
-  document.body.classList.remove('modal-open'); lastTrigger?.focus();
+  if (dialog.open) return;
+  if (lightbox.open) lightbox.close();
+  syncOverlayLock();
+  if (lastTrigger?.isConnected) lastTrigger.focus({ preventScroll: true });
 });
 
 document.querySelectorAll('[data-filter]').forEach(button => {
@@ -230,24 +328,75 @@ moreButton.addEventListener('click', () => {
 
 const menuButton = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('#navigation');
-function closeMenu() {
+const navigationHome = navigation.parentNode;
+const navigationMarker = document.createComment('navigation home');
+navigation.after(navigationMarker);
+const desktop = matchMedia('(min-width: 821px)');
+const drawer = document.createElement('dialog');
+drawer.id = 'menu-drawer';
+drawer.setAttribute('aria-label', 'Điều hướng chính');
+drawer.innerHTML = '<button type="button" class="drawer-close" aria-label="Đóng menu">×</button>';
+document.body.append(drawer);
+menuButton.setAttribute('aria-controls', 'menu-drawer');
+menuButton.setAttribute('aria-haspopup', 'dialog');
+function resetMenu() {
+  navigationHome.insertBefore(navigation, navigationMarker);
   navigation.classList.remove('open');
   menuButton.setAttribute('aria-expanded', 'false');
   menuButton.setAttribute('aria-label', 'Mở menu');
+  syncOverlayLock();
 }
+function closeMenu() { if (drawer.open) drawer.close(); }
+drawer.addEventListener('close', () => { if (!drawer.open) resetMenu(); });
+drawer.querySelector('.drawer-close').addEventListener('click', closeMenu);
+closeOnBackdrop(drawer);
 menuButton.addEventListener('click', () => {
-  const open = navigation.classList.toggle('open');
-  menuButton.setAttribute('aria-expanded', String(open));
-  menuButton.setAttribute('aria-label', open ? 'Đóng menu' : 'Mở menu');
+  if (desktop.matches) return;
+  if (drawer.open) { closeMenu(); return; }
+  drawer.append(navigation);
+  navigation.classList.add('open');
+  menuButton.setAttribute('aria-expanded', 'true');
+  menuButton.setAttribute('aria-label', 'Đóng menu');
+  drawer.showModal();
+  syncOverlayLock();
+  drawer.querySelector('.drawer-close').focus({ preventScroll: true });
 });
-navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && navigation.classList.contains('open')) {
-    closeMenu(); menuButton.focus();
+navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+  if (!drawer.open) return;
+  closeMenu();
+  const target = document.querySelector(link.hash);
+  // Close event restores the nav first; then focus the destination, not a hidden link.
+  requestAnimationFrame(() => {
+    if (!target) return;
+    const previous = target.getAttribute('tabindex');
+    target.tabIndex = -1;
+    target.focus({ preventScroll: true });
+    target.addEventListener('blur', () => {
+      if (previous === null) target.removeAttribute('tabindex');
+      else target.setAttribute('tabindex', previous);
+    }, { once: true });
+  });
+}));
+let swipeStart;
+drawer.addEventListener('touchstart', event => {
+  swipeStart = event.touches.length === 1 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
+}, { passive: true });
+drawer.addEventListener('touchend', event => {
+  if (!swipeStart) return;
+  const touch = event.changedTouches[0];
+  const dx = touch.clientX - swipeStart.x;
+  const dy = touch.clientY - swipeStart.y;
+  if (dx > 60 && dx > Math.abs(dy) * 1.5) closeMenu();
+  swipeStart = null;
+}, { passive: true });
+drawer.addEventListener('touchcancel', () => { swipeStart = null; }, { passive: true });
+desktop.addEventListener('change', event => {
+  if (event.matches && drawer.open) {
+    closeMenu();
+    resetMenu();
+    navigation.querySelector('a').focus({ preventScroll: true });
   }
 });
-document.addEventListener('click', event => { if (!event.target.closest('.nav-wrap')) closeMenu(); });
-matchMedia('(min-width: 821px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {

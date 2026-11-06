@@ -6,3 +6,10 @@
 .vscode/
 .env
 .env.*
+
+
+# Cấu hình AI Agent cục bộ
+.agents/
+skills-lock.json
+Agents.md
+IDEA.md
