@@ -29,6 +29,24 @@ function ScrollHashManager() {
   return null;
 }
 
+function AssetDownloadGuard() {
+  useEffect(() => {
+    const preventMediaSave = e => {
+      if (e.target instanceof Element && e.target.closest('img')) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('contextmenu', preventMediaSave);
+    document.addEventListener('dragstart', preventMediaSave);
+    return () => {
+      document.removeEventListener('contextmenu', preventMediaSave);
+      document.removeEventListener('dragstart', preventMediaSave);
+    };
+  }, []);
+
+  return null;
+}
+
 function HomePage() {
   return (
     <>
@@ -53,6 +71,7 @@ export function App() {
     <MotionConfig reducedMotion="user">
       <BrowserRouter>
         <ScrollHashManager />
+        <AssetDownloadGuard />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/index.html" element={<Navigate to="/" replace />} />

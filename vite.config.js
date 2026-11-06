@@ -17,7 +17,6 @@ const STATIC_ASSET_DIRS = [
   'NETSECDAY',
   'NEWBIE TO CREWBIE',
   'NGỌN ĐUỐC XANH',
-  'NoiDungChinh',
   'THANH NIÊN TIÊN TIẾN LÀM THEO LỜI BÁC',
   'Thanh Tich',
   'TRUYỀN THÔNG TẾT',
@@ -31,7 +30,6 @@ const MIME_MAP = {
   '.webp': 'image/webp',
   '.gif': 'image/gif',
   '.svg': 'image/svg+xml',
-  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 };
 
 function copyDirFiltered(src, dest) {
@@ -44,6 +42,8 @@ function copyDirFiltered(src, dest) {
     if (entry.isDirectory()) {
       copyDirFiltered(srcPath, destPath);
     } else {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (!MIME_MAP[ext]) continue;
       fs.copyFileSync(srcPath, destPath);
     }
   }
@@ -70,7 +70,9 @@ function preserveOriginalAssetsPlugin() {
         if (!fs.existsSync(fullPath) || !fs.statSync(fullPath).isFile()) return next();
 
         const ext = path.extname(fullPath).toLowerCase();
-        res.setHeader('Content-Type', MIME_MAP[ext] || 'application/octet-stream');
+        if (!MIME_MAP[ext]) return next();
+
+        res.setHeader('Content-Type', MIME_MAP[ext]);
         fs.createReadStream(fullPath).pipe(res);
       });
     },

@@ -80,13 +80,6 @@ export function DepartmentPage({ slug }) {
               <p>
                 Ba ban hỗ trợ lẫn nhau từ nội dung – tổ chức – truyền thông – hình ảnh. Mỗi ban có vai trò riêng, cùng góp phần nâng cao chất lượng chương trình và tạo môi trường để sinh viên thử sức, học hỏi, phát triển kỹ năng.
               </p>
-              <p className="source-note">
-                Nội dung dựa trên{' '}
-                <a href="/NoiDungChinh/Nội dung.docx">
-                  tài liệu giới thiệu Đoàn Khoa (DOCX)
-                </a>
-                .
-              </p>
             </section>
 
             <nav aria-label="Khám phá các ban khác">

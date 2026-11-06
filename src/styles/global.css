@@ -52,6 +52,9 @@ a:focus-visible {
 img {
   max-width: 100%;
   display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 h1,
@@ -1716,10 +1719,40 @@ h1 {
   min-height: 44px;
 }
 
-.archive-link {
-  min-height: 48px;
-  font-size: 13px;
+.achievement-feature--btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+}
+
+.timeline-preview-btn {
+  display: inline-flex;
   align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  color: var(--ice);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.timeline-preview-btn:hover {
+  color: var(--cyan);
+}
+
+.award-dialog {
+  width: min(1100px, calc(100% - 24px));
+  padding: 56px 16px 16px;
+  color: var(--text);
+}
+
+.lightbox-controls--center {
+  justify-content: center;
 }
 
 /* Redesigned #lien-he Contact & Interactive Photo Deck */

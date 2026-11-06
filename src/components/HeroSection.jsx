@@ -46,6 +46,7 @@ export function HeroSection() {
               src="/NEWBIE TO CREWBIE/ẢNH/NTC1.jpg"
               alt="Đại gia đình Khoa Mạng chào đón tân sinh viên tại Newbie to Crewbie"
               fetchPriority="high"
+              draggable="false"
             />
             <div className="photo-caption">
               <span>WE ARE ONE. WE ARE NETSEC.</span>
@@ -72,7 +73,6 @@ export function HeroSection() {
         className="container stats"
         role="group"
         aria-label="Đoàn Khoa qua các con số"
-        aria-describedby="stats-source"
       >
         <div>
           <strong>
@@ -96,9 +96,6 @@ export function HeroSection() {
           <p>Ban chuyên môn đồng hành</p>
         </div>
       </div>
-      <p id="stats-source" className="container source-note">
-        Theo <a href="/NoiDungChinh/Nội dung.docx">tài liệu giới thiệu Đoàn Khoa (DOCX)</a>; số liệu tại thời điểm biên soạn.
-      </p>
     </section>
   );
 }
