@@ -11,8 +11,19 @@ export function AboutSection() {
           <br />
           <span>Chung một khát vọng.</span>
         </h2>
-        <div className="about-emblem" aria-hidden="true">
-          &lt; <span>kết nối</span> /&gt;
+        <div className="about-milestone">
+          <img
+            src="/images/logo-mmt.png"
+            alt=""
+            width="42"
+            height="42"
+            className="about-milestone__logo"
+            loading="lazy"
+          />
+          <div className="about-milestone__text">
+            <strong>Đoàn cơ sở · 11/11/2014</strong>
+            <span>Hơn một thập kỷ đồng hành cùng tuổi trẻ Nhà Mạng</span>
+          </div>
         </div>
       </div>
 
