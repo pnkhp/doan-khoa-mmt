@@ -5,6 +5,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const RESOURCES_ROOT = path.resolve(__dirname, 'resources');
 
 const STATIC_ASSET_DIRS = [
   'CHUỖI TRAINING',
@@ -65,8 +66,8 @@ function preserveOriginalAssetsPlugin() {
         const topSegment = trimmed.split('/')[0];
         if (!STATIC_ASSET_DIRS.includes(topSegment)) return next();
 
-        const fullPath = path.resolve(__dirname, trimmed);
-        if (!fullPath.startsWith(__dirname)) return next();
+        const fullPath = path.resolve(RESOURCES_ROOT, trimmed);
+        if (!fullPath.startsWith(RESOURCES_ROOT)) return next();
         if (!fs.existsSync(fullPath) || !fs.statSync(fullPath).isFile()) return next();
 
         const ext = path.extname(fullPath).toLowerCase();
@@ -79,7 +80,7 @@ function preserveOriginalAssetsPlugin() {
     closeBundle() {
       const distDir = path.resolve(__dirname, 'dist');
       for (const dirName of STATIC_ASSET_DIRS) {
-        const src = path.resolve(__dirname, dirName);
+        const src = path.resolve(RESOURCES_ROOT, dirName);
         const dest = path.resolve(distDir, dirName);
         copyDirFiltered(src, dest);
       }
