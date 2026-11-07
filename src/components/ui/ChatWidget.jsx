@@ -3,9 +3,9 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   FAQ_DATA,
   FAQ_FALLBACK,
-  findFaqAnswer,
   SUGGESTED_FAQ_IDS,
-} from '../data/faqData.js';
+} from '../../data/faqData.js';
+import { findFaqAnswer } from '../../utils/faqSearch.js';
 
 const SUGGESTED_CHIPS = SUGGESTED_FAQ_IDS.map(id =>
   FAQ_DATA.find(entry => entry.id === id)

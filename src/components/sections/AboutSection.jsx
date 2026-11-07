@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { DEPARTMENTS } from '../data/departments.js';
+import { DEPARTMENTS } from '../../data/departments.js';
 
 export function AboutSection() {
   return (

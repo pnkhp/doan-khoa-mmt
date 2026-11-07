@@ -1,0 +1,240 @@
+/* ==========================================================================
+   Layout Container, Sticky Header, Mobile Drawer & Footer
+   ========================================================================== */
+
+.container {
+  width: min(1200px, calc(100% - 64px));
+  margin: auto;
+}
+
+.header {
+  position: sticky;
+  top: 16px;
+  width: min(1280px, calc(100% - 32px));
+  margin: 16px auto 0;
+  z-index: 20;
+  border: var(--glass-border);
+  border-radius: 18px;
+  background: rgba(248, 251, 255, 0.9);
+  color: var(--text);
+  box-shadow: var(--glass-shadow);
+}
+
+.nav-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 40px);
+  min-height: 76px;
+  gap: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.brand small {
+  display: block;
+  color: var(--muted);
+  font-size: 7px;
+  letter-spacing: 0.45px;
+  margin-top: 3px;
+}
+
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+#navigation {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#navigation a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 0;
+  position: relative;
+}
+
+#navigation a:hover {
+  color: var(--cyan);
+}
+
+#navigation a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.35);
+}
+
+#navigation .nav-contact {
+  display: flex;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(37, 99, 235, 0.35);
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.menu-toggle {
+  display: none;
+}
+
+/* Mobile Drawer Dialog */
+#menu-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  width: min(360px, 90vw);
+  max-width: 90vw;
+  padding: 16px;
+  border-radius: 18px 0 0 18px;
+  color: var(--text);
+}
+
+#menu-drawer[open] {
+  display: flex;
+  flex-direction: column;
+  animation: drawer-enter 0.22s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.drawer-close {
+  align-self: flex-end;
+  flex-shrink: 0;
+}
+
+#menu-drawer .drawer-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding: 16px 0;
+  gap: 8px;
+}
+
+#menu-drawer .drawer-nav a {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  min-height: 48px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+#menu-drawer .drawer-nav a.active {
+  background: #e2ebff;
+  color: #1d4ed8;
+}
+
+#menu-drawer .drawer-nav a.active::after {
+  display: none;
+}
+
+#menu-drawer .drawer-nav .nav-contact {
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  background: #2563eb;
+  border: 0;
+  margin-top: 8px;
+}
+
+@keyframes drawer-enter {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Footer */
+footer {
+  --text: #0f172a;
+  --muted: #475569;
+  --ice: #1d4ed8;
+  --cyan: #2563eb;
+  --line: #d7e3f3;
+  color: var(--text);
+  background: #edf2f9;
+  padding-top: 50px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 36px;
+  padding-bottom: 35px;
+}
+
+footer .brand {
+  font-size: 12px;
+}
+
+footer p {
+  font-size: 12px;
+  margin-top: 18px;
+}
+
+.footer-grid h3 {
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.footer-grid > div > a:not(.brand),
+#contact-facebook a {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.footer-grid > div:last-child p {
+  margin: 6px 0;
+}
+
+.footer-grid a:hover,
+.footer-bottom a:hover {
+  color: var(--cyan);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding: 20px 0 80px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.footer-bottom a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}

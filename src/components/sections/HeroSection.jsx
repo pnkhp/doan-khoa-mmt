@@ -1,47 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   AnimatePresence,
   motion,
   useMotionValue,
-  useReducedMotion,
   useSpring,
 } from 'motion/react';
-import { ArrowRightIcon, ArrowUpRightIcon } from './Icons.jsx';
-
-const HERO_SLIDES = [
-  {
-    id: 'ntc',
-    code: '01 / NHÀ MẠNG',
-    badge: 'Newbie to Crewbie',
-    title: 'Chào đón Tân sinh viên gia nhập đại gia đình Khoa Mạng',
-    image: '/NEWBIE TO CREWBIE/ẢNH/NTC1.jpg',
-    alt: 'Đại gia đình Khoa Mạng chào đón tân sinh viên tại Newbie to Crewbie',
-  },
-  {
-    id: 'netsec',
-    code: '02 / HỌC THUẬT',
-    badge: 'NETSEC DAY',
-    title: 'Kết nối sinh viên, giảng viên và doanh nghiệp công nghệ',
-    image: '/NETSECDAY/ẢNH/NSDTL1.jpg',
-    alt: 'Hoạt động học thuật và giao lưu doanh nghiệp tại NETSEC DAY',
-  },
-  {
-    id: 'ndx',
-    code: '03 / TÌNH NGUYỆN',
-    badge: 'Ngọn Đuốc Xanh',
-    title: 'Lan tỏa nhiệt huyết sẻ chia “Cho đi là còn mãi”',
-    image: '/NGỌN ĐUỐC XANH/NDX2026.jpg',
-    alt: 'Chiến dịch tình nguyện Ngọn Đuốc Xanh của Đoàn Khoa MMT&TT',
-  },
-  {
-    id: 'badminton',
-    code: '04 / THỂ THAO',
-    badge: 'NC Open Badminton',
-    title: 'Bùng nổ năng lượng và gắn kết đoàn viên trên sân cầu',
-    image: '/NC OPEN BADMINTON 2026/BADMINTON1.jpg',
-    alt: 'Giải cầu lông mở rộng NC Open Badminton 2026',
-  },
-];
+import { HERO_SLIDES } from '../../data/heroSlides.js';
+import { useAutoCycle } from '../../hooks/useAutoCycle.js';
+import { ArrowRightIcon, ArrowUpRightIcon } from '../ui/Icons.jsx';
 
 const TILT_SPRING = { stiffness: 220, damping: 24, mass: 0.7 };
 const SLIDE_EASE = [0.23, 1, 0.32, 1];
@@ -49,7 +15,6 @@ const SLIDE_EASE = [0.23, 1, 0.32, 1];
 export function HeroSection() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
 
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(-2);
@@ -60,11 +25,7 @@ export function HeroSection() {
     setActiveIdx(prev => (prev + 1) % HERO_SLIDES.length);
   }, []);
 
-  useEffect(() => {
-    if (shouldReduceMotion || isHovered) return undefined;
-    const timer = window.setInterval(nextSlide, 4800);
-    return () => window.clearInterval(timer);
-  }, [shouldReduceMotion, isHovered, nextSlide]);
+  const shouldReduceMotion = useAutoCycle(nextSlide, 4800, isHovered);
 
   const handlePointerMove = e => {
     if (shouldReduceMotion || e.pointerType !== 'mouse') return;

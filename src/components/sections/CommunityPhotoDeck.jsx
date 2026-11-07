@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { COMMUNITY_MOMENTS } from '../data/activities.js';
+import { useCallback, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { COMMUNITY_MOMENTS } from '../../data/activities.js';
+import { useAutoCycle } from '../../hooks/useAutoCycle.js';
 
 const CARD_SPRING = {
   type: 'spring',
@@ -15,7 +16,6 @@ export function CommunityPhotoDeck() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
 
   const total = COMMUNITY_MOMENTS.length;
 
@@ -27,11 +27,11 @@ export function CommunityPhotoDeck() {
     setActiveIndex(prev => (prev - 1 + total) % total);
   }, [total]);
 
-  useEffect(() => {
-    if (shouldReduceMotion || isHovered || isDragging) return undefined;
-    const timer = window.setInterval(nextCard, 4400);
-    return () => window.clearInterval(timer);
-  }, [shouldReduceMotion, isHovered, isDragging, nextCard]);
+  const shouldReduceMotion = useAutoCycle(
+    nextCard,
+    4400,
+    isHovered || isDragging
+  );
 
   // Build visible stack ordered back-to-front so front card renders on top cleanly
   const visibleCount = Math.min(4, total);

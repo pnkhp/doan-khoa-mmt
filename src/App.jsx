@@ -1,15 +1,9 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { MotionConfig } from 'motion/react';
-import { AboutSection } from './components/AboutSection.jsx';
-import { AchievementsSection } from './components/AchievementsSection.jsx';
-import { ActivitiesSection } from './components/ActivitiesSection.jsx';
-import { ChatWidget } from './components/ChatWidget.jsx';
-import { ContactSection } from './components/ContactSection.jsx';
-import { DepartmentPage } from './components/DepartmentPage.jsx';
-import { Footer } from './components/Footer.jsx';
-import { Header } from './components/Header.jsx';
-import { HeroSection } from './components/HeroSection.jsx';
+import { ChatWidget } from './components/ui/ChatWidget.jsx';
+import { DepartmentPage } from './pages/DepartmentPage.jsx';
+import { HomePage } from './pages/HomePage.jsx';
 
 function ScrollHashManager() {
   const { pathname, hash } = useLocation();
@@ -45,25 +39,6 @@ function AssetDownloadGuard() {
   }, []);
 
   return null;
-}
-
-function HomePage() {
-  return (
-    <>
-      <a className="skip-link" href="#main">
-        Đến nội dung chính
-      </a>
-      <Header variant="home" />
-      <main id="main" tabIndex={-1}>
-        <HeroSection />
-        <AboutSection />
-        <ActivitiesSection />
-        <AchievementsSection />
-        <ContactSection />
-      </main>
-      <Footer variant="home" />
-    </>
-  );
 }
 
 export function App() {

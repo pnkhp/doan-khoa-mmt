@@ -1,29 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRightIcon } from './Icons.jsx';
+import { useState } from 'react';
+import { useModalDialog } from '../../hooks/useModalDialog.js';
+import { ArrowUpRightIcon } from '../ui/Icons.jsx';
+import { LightboxDialog } from '../ui/LightboxDialog.jsx';
 
 export function AchievementsSection() {
   const [previewAward, setPreviewAward] = useState(null);
-  const dialogRef = useRef(null);
-  const lastTriggerRef = useRef(null);
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (previewAward) {
-      if (!dialog.open) dialog.showModal();
-      document.body.classList.add('fe-overlay-open');
-    } else {
-      if (dialog.open) dialog.close();
-      document.body.classList.remove('fe-overlay-open');
-    }
-  }, [previewAward]);
-
-  const closePreview = () => {
-    setPreviewAward(null);
-    requestAnimationFrame(() => {
-      lastTriggerRef.current?.focus({ preventScroll: true });
-    });
-  };
+  const { dialogRef, rememberTrigger, closeAndRestoreFocus } = useModalDialog(
+    Boolean(previewAward),
+    () => setPreviewAward(null)
+  );
 
   return (
     <section id="thanh-tich" className="section container">
@@ -48,7 +34,7 @@ export function AchievementsSection() {
           type="button"
           className="achievement-feature achievement-feature--btn"
           onClick={e => {
-            lastTriggerRef.current = e.currentTarget;
+            rememberTrigger(e.currentTarget);
             setPreviewAward({
               src: '/Thanh Tich/CoThiDua-2017-2018.jpeg',
               title: 'Cờ thi đua đơn vị xuất sắc dẫn đầu năm học 2017–2018',
@@ -103,7 +89,7 @@ export function AchievementsSection() {
               type="button"
               className="timeline-preview-btn"
               onClick={e => {
-                lastTriggerRef.current = e.currentTarget;
+                rememberTrigger(e.currentTarget);
                 setPreviewAward({
                   src: '/Thanh Tich/2019-BK-TWĐ.jpeg',
                   title: 'Bằng khen của Trung ương Đoàn năm học 2018–2019',
@@ -116,41 +102,15 @@ export function AchievementsSection() {
         </div>
       </div>
 
-      <dialog
+      <LightboxDialog
         id="award-dialog"
-        className="award-dialog"
-        ref={dialogRef}
-        aria-label={previewAward ? previewAward.title : 'Xem tư liệu thành tích'}
-        onCancel={e => {
-          e.preventDefault();
-          closePreview();
-        }}
-        onClick={e => {
-          if (e.target === dialogRef.current) closePreview();
-        }}
-      >
-        <button
-          type="button"
-          className="lightbox-close"
-          aria-label="Đóng tư liệu"
-          onClick={closePreview}
-        >
-          ×
-        </button>
-        {previewAward ? (
-          <>
-            <img
-              id="lightbox-image"
-              src={previewAward.src}
-              alt={previewAward.title}
-              draggable="false"
-            />
-            <div className="lightbox-controls lightbox-controls--center">
-              <p id="lightbox-caption">{previewAward.title}</p>
-            </div>
-          </>
-        ) : null}
-      </dialog>
+        dialogRef={dialogRef}
+        isOpen={Boolean(previewAward)}
+        title={previewAward?.title}
+        images={previewAward ? [previewAward.src] : []}
+        activeIndex={0}
+        onClose={closeAndRestoreFocus}
+      />
     </section>
   );
 }

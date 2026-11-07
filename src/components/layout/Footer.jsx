@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpIcon, ArrowUpRightIcon } from './Icons.jsx';
+import { ArrowUpIcon, ArrowUpRightIcon } from '../ui/Icons.jsx';
 
 export function Footer({ variant = 'home' }) {
   if (variant === 'department') {

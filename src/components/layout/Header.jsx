@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRightIcon } from './Icons.jsx';
+import { useModalDialog } from '../../hooks/useModalDialog.js';
+import { ArrowUpRightIcon } from '../ui/Icons.jsx';
 
 const NAV_ITEMS = [
   { id: 'trang-chu', label: 'Trang chủ' },
@@ -12,13 +13,15 @@ const NAV_ITEMS = [
 export function Header({ variant = 'home' }) {
   const [activeSection, setActiveSection] = useState('trang-chu');
   const [menuOpen, setMenuOpen] = useState(false);
-  const drawerRef = useRef(null);
-  const toggleBtnRef = useRef(null);
   const swipeStartRef = useRef(null);
 
+  const { dialogRef, rememberTrigger, closeAndRestoreFocus } = useModalDialog(
+    menuOpen,
+    () => setMenuOpen(false)
+  );
+
   useEffect(() => {
-    if (variant !== 'home') return undefined;
-    if (!('IntersectionObserver' in window)) return undefined;
+    if (variant !== 'home' || !('IntersectionObserver' in window)) return undefined;
 
     const observer = new IntersectionObserver(
       entries => {
@@ -37,34 +40,14 @@ export function Header({ variant = 'home' }) {
   }, [variant]);
 
   useEffect(() => {
-    const dialog = drawerRef.current;
-    if (!dialog) return undefined;
-
-    if (menuOpen) {
-      if (!dialog.open) dialog.showModal();
-      document.body.classList.add('fe-overlay-open');
-    } else {
-      if (dialog.open) dialog.close();
-      document.body.classList.remove('fe-overlay-open');
-    }
-
+    if (!menuOpen) return undefined;
     const mq = window.matchMedia('(min-width: 821px)');
     const handleMq = e => {
-      if (e.matches && menuOpen) setMenuOpen(false);
+      if (e.matches) setMenuOpen(false);
     };
     mq.addEventListener('change', handleMq);
-    return () => {
-      mq.removeEventListener('change', handleMq);
-      document.body.classList.remove('fe-overlay-open');
-    };
+    return () => mq.removeEventListener('change', handleMq);
   }, [menuOpen]);
-
-  const closeDrawer = () => {
-    setMenuOpen(false);
-    requestAnimationFrame(() => {
-      toggleBtnRef.current?.focus({ preventScroll: true });
-    });
-  };
 
   const handleNavClick = targetId => {
     setActiveSection(targetId);
@@ -136,14 +119,16 @@ export function Header({ variant = 'home' }) {
             </span>
           </a>
           <button
-            ref={toggleBtnRef}
             className="menu-toggle"
             type="button"
             aria-label={menuOpen ? 'Đóng menu' : 'Mở menu'}
             aria-expanded={menuOpen}
             aria-controls="menu-drawer"
             aria-haspopup="dialog"
-            onClick={() => setMenuOpen(prev => !prev)}
+            onClick={e => {
+              rememberTrigger(e.currentTarget);
+              setMenuOpen(prev => !prev);
+            }}
           >
             ☰
           </button>
@@ -155,14 +140,14 @@ export function Header({ variant = 'home' }) {
 
       <dialog
         id="menu-drawer"
-        ref={drawerRef}
+        ref={dialogRef}
         aria-label="Điều hướng chính"
         onCancel={e => {
           e.preventDefault();
-          closeDrawer();
+          closeAndRestoreFocus();
         }}
         onClick={e => {
-          if (e.target === drawerRef.current) closeDrawer();
+          if (e.target === dialogRef.current) closeAndRestoreFocus();
         }}
         onTouchStart={e => {
           swipeStartRef.current =
@@ -175,11 +160,16 @@ export function Header({ variant = 'home' }) {
           const touch = e.changedTouches[0];
           const dx = touch.clientX - swipeStartRef.current.x;
           const dy = touch.clientY - swipeStartRef.current.y;
-          if (dx > 60 && dx > Math.abs(dy) * 1.5) closeDrawer();
+          if (dx > 60 && dx > Math.abs(dy) * 1.5) closeAndRestoreFocus();
           swipeStartRef.current = null;
         }}
       >
-        <button type="button" className="drawer-close" aria-label="Đóng menu" onClick={closeDrawer}>
+        <button
+          type="button"
+          className="drawer-close"
+          aria-label="Đóng menu"
+          onClick={closeAndRestoreFocus}
+        >
           ×
         </button>
         <nav className="drawer-nav" aria-label="Điều hướng di động">

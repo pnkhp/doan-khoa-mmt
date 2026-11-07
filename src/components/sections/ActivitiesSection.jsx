@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ACTIVITIES, ACTIVITY_FILTERS } from '../data/activities.js';
-import { ArrowDownIcon, ArrowUpRightIcon } from './Icons.jsx';
+import { ACTIVITIES, ACTIVITY_FILTERS } from '../../data/activities.js';
+import { useModalDialog } from '../../hooks/useModalDialog.js';
+import { ArrowDownIcon, ArrowUpRightIcon } from '../ui/Icons.jsx';
+import { LightboxDialog } from '../ui/LightboxDialog.jsx';
 
 const EASE_OUT = [0.23, 1, 0.32, 1];
 
@@ -10,56 +12,31 @@ export function ActivitiesSection() {
   const [expanded, setExpanded] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [lightboxState, setLightboxState] = useState(null);
-  const detailDialogRef = useRef(null);
-  const lightboxDialogRef = useRef(null);
-  const lastTriggerRef = useRef(null);
-  const lastImageTriggerRef = useRef(null);
   const shouldReduceMotion = useReducedMotion();
+
+  const {
+    dialogRef: detailDialogRef,
+    rememberTrigger: rememberCardTrigger,
+    closeAndRestoreFocus: closeDetail,
+  } = useModalDialog(
+    Boolean(selectedActivity),
+    () => {
+      setLightboxState(null);
+      setSelectedActivity(null);
+    },
+    { resetScrollOnOpen: true }
+  );
+
+  const {
+    dialogRef: lightboxDialogRef,
+    rememberTrigger: rememberImageTrigger,
+    closeAndRestoreFocus: closeLightbox,
+  } = useModalDialog(Boolean(lightboxState), () => setLightboxState(null));
 
   const matches = ACTIVITIES.filter(
     item => currentFilter === 'all' || item.category === currentFilter
   );
   const visible = expanded ? matches : matches.slice(0, 6);
-
-  useEffect(() => {
-    const dialog = detailDialogRef.current;
-    if (!dialog) return;
-    if (selectedActivity) {
-      if (!dialog.open) dialog.showModal();
-      dialog.scrollTop = 0;
-      document.body.classList.add('fe-overlay-open');
-    } else {
-      if (dialog.open) dialog.close();
-      if (!lightboxState) document.body.classList.remove('fe-overlay-open');
-    }
-  }, [selectedActivity, lightboxState]);
-
-  useEffect(() => {
-    const lb = lightboxDialogRef.current;
-    if (!lb) return;
-    if (lightboxState) {
-      if (!lb.open) lb.showModal();
-      document.body.classList.add('fe-overlay-open');
-    } else {
-      if (lb.open) lb.close();
-      if (!selectedActivity) document.body.classList.remove('fe-overlay-open');
-    }
-  }, [lightboxState, selectedActivity]);
-
-  const closeDetail = () => {
-    setLightboxState(null);
-    setSelectedActivity(null);
-    requestAnimationFrame(() => {
-      lastTriggerRef.current?.focus({ preventScroll: true });
-    });
-  };
-
-  const closeLightbox = () => {
-    setLightboxState(null);
-    requestAnimationFrame(() => {
-      lastImageTriggerRef.current?.focus({ preventScroll: true });
-    });
-  };
 
   const stepLightbox = delta => {
     setLightboxState(prev => {
@@ -122,9 +99,21 @@ export function ActivitiesSection() {
                 key={item.id}
                 layout={!shouldReduceMotion}
                 className="activity-card"
-                initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 10 }}
-                animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-                exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
+                initial={
+                  shouldReduceMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, scale: 0.96, y: 10 }
+                }
+                animate={
+                  shouldReduceMotion
+                    ? { opacity: 1 }
+                    : { opacity: 1, scale: 1, y: 0 }
+                }
+                exit={
+                  shouldReduceMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, scale: 0.96 }
+                }
                 transition={{
                   duration: 0.22,
                   delay: Math.min(idx * 0.035, 0.18),
@@ -132,7 +121,12 @@ export function ActivitiesSection() {
                 }}
               >
                 <div className="card-image">
-                  <img src={item.images[0]} alt={item.title} loading="lazy" />
+                  <img
+                    src={item.images[0]}
+                    alt={item.title}
+                    loading="lazy"
+                    draggable="false"
+                  />
                   <span className="card-tag">{item.label}</span>
                 </div>
                 <div className="card-content">
@@ -142,7 +136,7 @@ export function ActivitiesSection() {
                     type="button"
                     aria-label={`Khám phá ${item.title}`}
                     onClick={e => {
-                      lastTriggerRef.current = e.currentTarget;
+                      rememberCardTrigger(e.currentTarget);
                       setSelectedActivity(item);
                     }}
                   >
@@ -206,7 +200,7 @@ export function ActivitiesSection() {
                   aria-label={`Phóng to ${selectedActivity.title} – hình ảnh ${i + 1}`}
                   aria-haspopup="dialog"
                   onClick={e => {
-                    lastImageTriggerRef.current = e.currentTarget;
+                    rememberImageTrigger(e.currentTarget);
                     setLightboxState({ item: selectedActivity, index: i });
                   }}
                 >
@@ -214,6 +208,7 @@ export function ActivitiesSection() {
                     src={imgSrc}
                     alt={`${selectedActivity.title} – hình ảnh ${i + 1}`}
                     loading={i === 0 ? 'eager' : 'lazy'}
+                    draggable="false"
                   />
                 </button>
               ))}
@@ -222,69 +217,16 @@ export function ActivitiesSection() {
         ) : null}
       </dialog>
 
-      <dialog
+      <LightboxDialog
         id="lightbox-dialog"
-        ref={lightboxDialogRef}
-        aria-label="Xem ảnh hoạt động"
-        onCancel={e => {
-          e.preventDefault();
-          closeLightbox();
-        }}
-        onClick={e => {
-          if (e.target === lightboxDialogRef.current) closeLightbox();
-        }}
-        onKeyDown={e => {
-          if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            stepLightbox(-1);
-          } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            stepLightbox(1);
-          }
-        }}
-      >
-        <button
-          type="button"
-          className="lightbox-close"
-          aria-label="Đóng ảnh"
-          onClick={closeLightbox}
-        >
-          ×
-        </button>
-        {lightboxState ? (
-          <>
-            <img
-              id="lightbox-image"
-              src={lightboxState.item.images[lightboxState.index]}
-              alt={`${lightboxState.item.title} – hình ảnh ${lightboxState.index + 1}`}
-            />
-            <div className="lightbox-controls">
-              <button
-                type="button"
-                className="lightbox-prev"
-                aria-label="Ảnh trước"
-                disabled={lightboxState.item.images.length < 2}
-                onClick={() => stepLightbox(-1)}
-              >
-                ←
-              </button>
-              <p id="lightbox-caption" aria-live="polite" aria-atomic="true">
-                {lightboxState.item.title} · {lightboxState.index + 1} /{' '}
-                {lightboxState.item.images.length}
-              </p>
-              <button
-                type="button"
-                className="lightbox-next"
-                aria-label="Ảnh tiếp theo"
-                disabled={lightboxState.item.images.length < 2}
-                onClick={() => stepLightbox(1)}
-              >
-                →
-              </button>
-            </div>
-          </>
-        ) : null}
-      </dialog>
+        dialogRef={lightboxDialogRef}
+        isOpen={Boolean(lightboxState)}
+        title={lightboxState?.item.title}
+        images={lightboxState?.item.images || []}
+        activeIndex={lightboxState?.index || 0}
+        onClose={closeLightbox}
+        onStep={stepLightbox}
+      />
     </section>
   );
 }

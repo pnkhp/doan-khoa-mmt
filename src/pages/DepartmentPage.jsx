@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'motion/react';
+import { Footer } from '../components/layout/Footer.jsx';
+import { Header } from '../components/layout/Header.jsx';
 import { DEPARTMENTS } from '../data/departments.js';
-import { Footer } from './Footer.jsx';
-import { Header } from './Header.jsx';
 
 const PAGE_EASE = [0.23, 1, 0.32, 1];
 

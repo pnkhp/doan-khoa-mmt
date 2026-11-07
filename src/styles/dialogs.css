@@ -1,0 +1,127 @@
+/* ==========================================================================
+   Native <dialog> Modals, Activity Detail & Lightbox Viewer
+   ========================================================================== */
+
+dialog {
+  width: min(800px, calc(100% - 30px));
+  max-height: calc(100dvh - 40px);
+  border: var(--glass-border);
+  border-radius: 20px;
+  padding: 0;
+  color: var(--text);
+  background: rgba(248, 251, 255, 0.98);
+  box-shadow: 0 40px 120px rgba(15, 23, 42, 0.32);
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  background: rgba(3, 8, 20, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.dialog-content {
+  padding: 32px;
+}
+
+.dialog-content h2 {
+  font-size: 28px;
+  padding-right: 20px;
+  overflow-wrap: anywhere;
+}
+
+.dialog-content p {
+  white-space: pre-line;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.dialog-close {
+  position: sticky;
+  float: right;
+  top: 12px;
+  margin: 12px 12px 0 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: var(--glass-border);
+  background: #e8eff9;
+  color: var(--text);
+  font-size: 25px;
+  line-height: 1;
+  z-index: 1;
+}
+
+#dialog-gallery {
+  display: grid;
+  gap: 18px;
+}
+
+#dialog-gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.gallery-image {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  border-radius: 10px;
+}
+
+#lightbox-dialog,
+.award-dialog {
+  width: min(1100px, calc(100% - 24px));
+  padding: 56px 16px 16px;
+  color: var(--text);
+}
+
+#lightbox-image {
+  width: 100%;
+  height: min(68dvh, 760px);
+  object-fit: contain;
+}
+
+.lightbox-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.lightbox-controls--center {
+  justify-content: center;
+}
+
+#lightbox-caption {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+.lightbox-controls button,
+.lightbox-close,
+.drawer-close {
+  min-width: 44px;
+  min-height: 44px;
+  border: var(--glass-border);
+  border-radius: 10px;
+  background: #e8eff9;
+  color: var(--text);
+  font-size: 24px;
+}
+
+.lightbox-controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.lightbox-close {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}

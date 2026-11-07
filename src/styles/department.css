@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Department Editorial Detail Pages
+   ========================================================================== */
+
+.department-header .nav-wrap {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-block: 12px;
+}
+
+.department-header .text-link {
+  flex-shrink: 0;
+}
+
+.department-hero {
+  padding-block: 64px 40px;
+}
+
+.department-hero h1 {
+  max-width: 900px;
+  margin-block: 24px;
+}
+
+.department-hero .lead {
+  max-width: 850px;
+  font-size: clamp(17px, 2vw, 21px);
+}
+
+.department-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 44px;
+  padding-bottom: 72px;
+}
+
+.department-story section {
+  margin-bottom: 36px;
+}
+
+.department-story h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  margin-bottom: 20px;
+}
+
+.department-story ul {
+  padding-left: 24px;
+  color: var(--muted);
+}
+
+.department-story li {
+  margin-block: 12px;
+}
+
+.department-aside {
+  align-self: start;
+  border: var(--glass-border);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: var(--glass-shadow);
+}
+
+.department-aside h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.department-aside .button {
+  margin-top: 12px;
+}
+
+.department-other {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.department-footer {
+  padding-block: 24px;
+}

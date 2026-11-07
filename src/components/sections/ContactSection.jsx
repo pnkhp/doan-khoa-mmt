@@ -1,5 +1,5 @@
 import { CommunityPhotoDeck } from './CommunityPhotoDeck.jsx';
-import { ArrowUpRightIcon } from './Icons.jsx';
+import { ArrowUpRightIcon } from '../ui/Icons.jsx';
 
 export function ContactSection() {
   return (
